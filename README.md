@@ -5,9 +5,7 @@ A container image with ChipWhisperer and JupyterHub optimized for user-mode (non
 ## Usage
 
 ```sh
-sudo groupadd -r chipwhisperer
-sudo usermod -aG chipwhisperer "$(whoami)"
-sudo cp 90-newae.rules /etc/udev/rules.d/
+sed "s/chipwhisperer/$(whoami)/" 90-newae.rules | sudo tee /etc/udev/rules.d/90-newae.rules
 ./build.sh && ./run.sh [workdir]
 ```
 
