@@ -39,5 +39,11 @@ RUN	pip install ipympl
 # Patch IPython usage for JupyterLab
 RUN	sed -i "s/%matplotlib notebook/%matplotlib widget/" "ChipWhisperer Setup Test.ipynb"
 
+# Disable JupyterLab news popup
+RUN	jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
+
+# Disable jupyter_nbextensions_configurator (not compatible with JupyterLab)
+RUN	jupyter server extension disable jupyter_nbextensions_configurator
+
 # Configure JupyterLab to start automatically
-CMD jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser --LabApp.token=''
+CMD	jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser --IdentityProvider.token=''
