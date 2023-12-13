@@ -20,27 +20,22 @@ RUN	curl -sSL "https://github.com/newaetech/chipwhisperer/archive/refs/tags/5.7.
 	tar xzv --strip-components 1
 
 # Patch scipy version
-RUN sed -i "s/scipy==1.1.0/scipy>=1.1.0/" software/requirements.txt
+RUN	sed -i "s/scipy==1.1.0/scipy>=1.1.0/" software/requirements.txt
 
 # Install the ChipWhisperer stack
 RUN	pip install numpy -r software/requirements.txt
 RUN	python setup.py develop
 
-# Prepare the Jupyter stack for ChipWhisperer
-WORKDIR /opt/chipwhisperer-jupyter
-
-RUN	curl -sSL "https://github.com/newaetech/chipwhisperer-jupyter/archive/8b5b28e2fb9041608b015d5333a514197485b64f.tar.gz" | \
-	tar xzv --strip-components 1
-
-# Install JupyterLab and dependencies
-RUN	pip install -r requirements.txt
-
 # Install additional components
 RUN	apt-get -y install libusb-1.0-0 gcc-arm-none-eabi gcc-avr make
-RUN	pip install ipympl
 
-# Patch IPython usage for JupyterLab
-RUN	sed -i "s/%matplotlib notebook/%matplotlib widget/" "ChipWhisperer Setup Test.ipynb"
+# Install JupyterLab and dependencies
+RUN	pip install -r <(\
+	curl -sSL "https://github.com/newaetech/chipwhisperer-jupyter/archive/8b5b28e2fb9041608b015d5333a514197485b64f.tar.gz" | \
+	tar xzO --wildcards --no-wildcards-match-slash "*/requirements.txt")
+
+# Install additional components
+RUN	pip install ipympl lascar
 
 # Disable JupyterLab news popup
 RUN	jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
