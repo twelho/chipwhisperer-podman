@@ -2,6 +2,9 @@ FROM python:3.10-slim-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Use bash instead of dash
+RUN ln -sf bash /bin/sh
+
 # Install and upgrade base packages
 RUN	apt-get update && apt-get -y full-upgrade && \
 	apt-get -y install bash-completion curl nano tzdata && \
