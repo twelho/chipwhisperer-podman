@@ -1,7 +1,7 @@
 #!/bin/sh -ex
 
 if [ -n "$1" ]; then
-	set -- -v "$1:/data:Z" -w /data
+	set -- -v "$1:/opt/chipwhisperer/jupyter:Z"
 fi
 
 exec podman run -it --rm \
@@ -9,5 +9,6 @@ exec podman run -it --rm \
 	-p 8888:8888 \
 	--device /dev/bus/usb \
 	--security-opt label=disable \
+	-e TZ="$(readlink -f /etc/localtime)" \
 	"$@" \
 	chipwhisperer
